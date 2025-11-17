@@ -1,33 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Liked Cats</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body { overflow-y: auto; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding: 20px;
-    }
-    .grid img {
-      width: 100%;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Liked Cats - Paws & Preferences</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body{overflow:auto}
+  .liked-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:18px}
+  .liked-grid img{width:100%;height:160px;object-fit:cover;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+  .back{display:block;text-align:center;margin:12px;color:#ff3e7f;text-decoration:none;font-weight:700}
+</style>
 </head>
 <body>
-
-<div class="app">
-  <h1>Liked Cats 😻</h1>
-  <div class="grid" id="likedGrid"></div>
-  <button onclick="clearLikes()">Clear All</button><br><br>
-  <a href="index.html">← Back to Swiping</a>
-</div>
-
+  <div class="app">
+    <h1 class="brand">Liked Cats 😻</h1>
+    <div class="liked-grid" id="likedGrid"></div>
+    <button id="clearBtn" class="btn btn-undo">Clear All</button>
+    <a class="back" href="index.html">← Back to swiping</a>
+  </div>
 <script src="liked.js"></script>
 </body>
 </html>
