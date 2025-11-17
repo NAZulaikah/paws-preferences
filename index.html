@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Paws & Preferences</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paws & Preferences</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff6b9a">
+
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div id="app">
-    <header class="topbar">
-      <h1 class="title">Paws & Preferences 🐾</h1>
-      <p class="subtitle">Swipe right if you like a kitty — left if you don't!</p>
+
+    <div id="spinner" class="spinner hidden"></div>
+
+    <header>
+        <h1>Paws & Preferences</h1>
     </header>
 
     <main>
-      <div id="card-container" class="card-container" aria-live="polite"></div>
+        <div class="card-area">
+            <div id="card-container"></div>
+        </div>
 
-      <div class="controls">
-        <button id="dislike" class="control-btn dislike" aria-label="Dislike">❌</button>
-        <button id="like" class="control-btn like" aria-label="Like">❤️</button>
-      </div>
+        <div class="controls">
+            <button id="undo" class="control-btn undo">↩️</button>
+            <button id="dislike" class="control-btn dislike">❌</button>
+            <button id="like" class="control-btn like">❤️</button>
+        </div>
     </main>
-  </div>
 
-  <div id="summary" class="summary hidden" role="region" aria-label="Summary">
-    <div class="summary-inner">
-      <h2 class="summary-title">You liked <span id="like-count">0</span> cats! 😻</h2>
-      <div id="liked-grid" class="liked-grid"></div>
-      <div class="summary-actions">
+    <div id="summary" class="hidden summary-page">
+        <h2>You liked <span id="liked-count"></span> cats!</h2>
+        <div id="liked-gallery"></div>
+
         <button id="restart" class="restart-btn">Restart</button>
-        <button id="clear" class="clear-btn">Clear Saved Progress</button>
-      </div>
     </div>
-  </div>
 
-  <footer class="footer">
-    <small>Powered by <a href="https://cataas.com/" target="_blank" rel="noopener">Cataas</a></small>
-  </footer>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
