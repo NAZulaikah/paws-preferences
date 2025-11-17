@@ -1,193 +1,29 @@
-/* Cute & Colorful theme - paws-preferences */
 :root{
-  --bg: #fff7fb;
-  --card: #ffffff;
-  --accent: #ffb4d1;
-  --accent-2: #ffd8a8;
-  --muted: #7a7a86;
-  --btn-like: #ff6b9a;
-  --btn-dislike: #9ad1ff;
-  --shadow: rgba(24,24,40,0.06);
-  --round: 20px;
-  --glass: rgba(255,255,255,0.6);
+  --bg:#fff6fb;
+  --card:#fff;
+  --accent:#ff6b9a;
+  --muted:#6b6b74;
+  --radius:22px;
 }
-
 *{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: 'Quicksand', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg, #fff7fb 0%, #fffaf0 100%);
-  color:#222;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
-#app{
-  width:100%;
-  max-width:420px;
-  min-height:640px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
-  border-radius:24px;
-  box-shadow: 0 12px 30px var(--shadow);
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-  position:relative;
-  overflow:hidden;
-}
-
-/* header */
-.topbar{ text-align:center; margin-top:6px}
-.title{ margin:0; font-size:20px; letter-spacing:0.2px; color:#46283b}
-.subtitle{ margin:6px 0 0 0; font-size:13px; color:var(--muted)}
-
-/* Cards */
-.card-container{
-  width:90%;
-  max-width:360px;
-  height:58%;
-  min-height:360px;
-  position:relative;
-  margin-top:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.card{
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:20px;
-  overflow:hidden;
-  background:var(--card);
-  box-shadow: 0 10px 28px rgba(75,20,60,0.08);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  touch-action:none;
-  transition: transform 220ms cubic-bezier(.22,.9,.32,1);
-  will-change: transform;
-  user-select:none;
-}
-
-.card .placeholder{
-  width:60%;
-  height:60%;
-  border-radius:12px;
-  background:linear-gradient(135deg, var(--accent), var(--accent-2));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-weight:700;
-  font-size:20px;
-}
-
-.card img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-/* Controls */
-.controls{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:28px;
-  margin-top:12px;
-  pointer-events:auto;
-}
-
-.control-btn{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  border:none;
-  font-size:26px;
-  box-shadow: 0 6px 18px rgba(28,20,40,0.09);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  transition: transform 140ms ease;
-}
-
-.control-btn:active{ transform:scale(.96) }
-
-.like{
-  background: linear-gradient(135deg,var(--btn-like), #ff9cc2);
-  color:white;
-}
-
-.dislike{
-  background: linear-gradient(135deg,#9fd9ff,var(--btn-dislike));
-  color:white;
-}
-
-/* Summary */
-.summary{
-  width:100%;
-  max-width:420px;
-  min-height:640px;
-  background:linear-gradient(180deg,#fffefc,#fff7fb);
-  border-radius:20px;
-  box-shadow: 0 12px 30px var(--shadow);
-  padding:18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-}
-
-.summary-inner{ width:100%; text-align:center }
-.summary-title{ margin:10px 0; font-size:20px; color:#46283b }
-.liked-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin-top:12px;
-  padding:6px;
-}
-
-.liked-grid img{
-  width:100%;
-  height:140px;
-  object-fit:cover;
-  border-radius:12px;
-  box-shadow: 0 6px 18px rgba(24,20,40,0.06);
-}
-
-/* Buttons in summary */
-.restart-btn, .clear-btn{
-  margin:10px 6px 0 6px;
-  padding:10px 14px;
-  border-radius:12px;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.restart-btn{ background:#ffd8a8; color:#5b2a00 }
-.clear-btn{ background:#ffeef7; color:#7a2f4a; }
-
-/* footer */
-.footer{ position:fixed; bottom:18px; text-align:center; font-size:12px; color:var(--muted) }
-.footer a{ color:#6f2a4b; text-decoration:none }
-
-/* helpers */
-.hidden{ display:none }
-
-/* responsive tweaks */
-@media (max-width:420px){
-  .card-container{ height:56vh; min-height:320px }
-}
+html,body{height:100%;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Quicksand',sans-serif;background:var(--bg);overflow:hidden}
+.app{max-width:420px;margin:0 auto;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:18px 14px;}
+.brand{margin:6px 0 12px;font-size:18px;color:#3b2030}
+.card-stack{width:100%;height:380px;position:relative;display:flex;align-items:center;justify-content:center}
+.card{position:absolute;inset:0;border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 14px 36px rgba(40,12,30,0.08);touch-action:pan-y;transition:transform .22s cubic-bezier(.22,.9,.32,1),opacity .22s}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.controls{width:100%;display:flex;justify-content:space-evenly;gap:12px;margin-top:18px}
+.btn{width:66px;height:66px;border-radius:50%;border:none;background:white;box-shadow:0 8px 20px rgba(0,0,0,0.08);font-size:22px;cursor:pointer}
+.btn-like{background:linear-gradient(135deg,var(--accent),#ff9cc2);color:#fff}
+.btn-dislike{background:linear-gradient(135deg,#9fd9ff,#6fbfff);color:#022}
+.btn-undo{background:linear-gradient(135deg,#fff1c9,#ffd8a8);color:#6b3f00}
+.view-liked{margin-top:14px;color:#ff3e7f;text-decoration:none;font-weight:600}
+/* Overlay spinner */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;z-index:9999}
+.paw-wheel{width:120px;height:120px;position:relative;display:block;transform-origin:center;animation:rotateWheel 1.6s linear infinite}
+.paw{position:absolute;left:50%;top:50%;transform-origin:center center;opacity:0.98}
+.paw1{transform:translate(-50%,-120%)}
+.paw2{transform:translate(60%,-10%)}
+.paw3{transform:translate(-160%,-10%)}
+@keyframes rotateWheel{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@media (max-width:380px){.card-stack{height:340px}.btn{width:60px;height:60px;font-size:20px}}
