@@ -1,43 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Paws & Preferences</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff6b9a">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-    <header class="topbar">
-      <h1 class="title">Paws & Preferences 🐾</h1>
-      <p class="subtitle">Swipe right if you like a kitty — left if you don't!</p>
-    </header>
+  <div class="app">
+    <h1 class="brand">Paws & Preferences 🐾</h1>
 
-    <main>
-      <div id="card-container" class="card-container" aria-live="polite"></div>
-
-      <div class="controls">
-        <button id="dislike" class="control-btn dislike" aria-label="Dislike">❌</button>
-        <button id="like" class="control-btn like" aria-label="Like">❤️</button>
-      </div>
-    </main>
-  </div>
-
-  <div id="summary" class="summary hidden" role="region" aria-label="Summary">
-    <div class="summary-inner">
-      <h2 class="summary-title">You liked <span id="like-count">0</span> cats! 😻</h2>
-      <div id="liked-grid" class="liked-grid"></div>
-      <div class="summary-actions">
-        <button id="restart" class="restart-btn">Restart</button>
-        <button id="clear" class="clear-btn">Clear Saved Progress</button>
+    <!-- Full-screen paw spinner overlay -->
+    <div id="overlay" class="overlay hidden" aria-hidden="true">
+      <div class="paw-wheel" aria-hidden="true">
+        <svg class="paw paw1" viewBox="0 0 24 24" width="36" height="36"><path fill="#ff6b9a" d="M12 13c2.21 0 4-1.79 4-4S14.21 5 12 5 8 6.79 8 9s1.79 4 4 4z"/><path fill="#ff6b9a" d="M6.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 3.5zM15 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 15 3.5z"/></svg>
+        <svg class="paw paw2" viewBox="0 0 24 24" width="36" height="36"><path fill="#ffd28f" d="M12 13c2.21 0 4-1.79 4-4S14.21 5 12 5 8 6.79 8 9s1.79 4 4 4z"/><path fill="#ffd28f" d="M6.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 3.5zM15 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 15 3.5z"/></svg>
+        <svg class="paw paw3" viewBox="0 0 24 24" width="36" height="36"><path fill="#b3e6ff" d="M12 13c2.21 0 4-1.79 4-4S14.21 5 12 5 8 6.79 8 9s1.79 4 4 4z"/><path fill="#b3e6ff" d="M6.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 3.5zM15 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 15 3.5z"/></svg>
       </div>
     </div>
-  </div>
 
-  <footer class="footer">
-    <small>Powered by <a href="https://cataas.com/" target="_blank" rel="noopener">Cataas</a></small>
-  </footer>
+    <div class="card-stack" id="cardStack" aria-live="polite"></div>
+
+    <div class="controls">
+      <button id="dislike" class="btn btn-dislike" aria-label="Dislike">❌</button>
+      <button id="undo" class="btn btn-undo" aria-label="Undo">↩️</button>
+      <button id="like" class="btn btn-like" aria-label="Like">❤️</button>
+    </div>
+
+    <a class="view-liked" href="liked.html">View liked cats →</a>
+  </div>
 
   <script src="script.js"></script>
 </body>
