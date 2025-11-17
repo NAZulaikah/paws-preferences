@@ -1,150 +1,53 @@
-body {
+/* Allow full scrolling */
+html, body {
   margin: 0;
   padding: 0;
-  font-family: "Poppins", sans-serif;
+  height: auto;
+  overflow-y: auto;
+  font-family: sans-serif;
   background: #fff7fb;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
 }
 
-header {
-  text-align: center;
-  padding: 10px 0;
-  background: #ffb3d9;
-  color: #5d2d45;
-  font-weight: bold;
-  font-size: 1.4rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+/* Main container scrolls naturally */
+.app {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.card-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 20px 0;
-}
-
-#card-container {
+/* Card stack container – DO NOT block scroll */
+.card-stack {
   position: relative;
-  width: min(90vw, 350px);
-  height: min(80vh, 500px);
+  width: 100%;
+  height: 420px;
+  margin: 0 auto;
+  overflow: visible; /* IMPORTANT */
 }
 
-.card {
+/* Cat card */
+.cat-card {
   width: 100%;
-  height: 100%;
-  background: white;
-  border-radius: 18px;
-  overflow: hidden;
+  height: 420px;
+  border-radius: 20px;
   position: absolute;
   top: 0;
   left: 0;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  transition: transform 0.2s ease-out;
+
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+  touch-action: pan-y;  
+  /* This allows vertical scrolling + horizontal swiping */
 }
 
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .cat-card, .card-stack {
+    height: 360px;
+  }
 
-/* Controls */
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding-bottom: 10px;
-}
-
-.control-btn {
-  border: none;
-  padding: 15px 20px;
-  font-size: 1.5rem;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.control-btn.like {
-  background: #ff7fab;
-  color: white;
-}
-.control-btn.dislike {
-  background: #ffcece;
-  color: #b20000;
-}
-.control-btn.undo {
-  background: #ffe9a8;
-  color: #8a5b00;
-}
-
-.control-btn:hover {
-  transform: scale(1.15);
-}
-
-/* Spinner */
-.spinner {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #ff6b9a;
-  border-radius: 50%;
-  width: 55px;
-  height: 55px;
-  animation: spin 1s linear infinite;
-  z-index: 999;
-}
-
-.hidden { display: none; }
-
-@keyframes spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Summary Page */
-.summary-page {
-  position: absolute;
-  inset: 0;
-  background: #fff7fb;
-  padding: 20px;
-  text-align: center;
-  overflow-y: auto;
-}
-
-#liked-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px,1fr));
-  gap: 10px;
-  margin-top: 20px;
-}
-
-#liked-gallery img {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.restart-btn {
-  background: #ff7fab;
-  border: none;
-  padding: 15px;
-  color: white;
-  border-radius: 12px;
-  margin-top: 20px;
-  font-size: 1rem;
+  .app {
+    padding: 16px;
+  }
 }
