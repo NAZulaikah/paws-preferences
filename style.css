@@ -1,73 +1,29 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  background: #fff5fb;
-  font-family: 'Poppins', sans-serif;
+:root{
+  --bg:#fff6fb;
+  --card:#fff;
+  --accent:#ff6b9a;
+  --muted:#6b6b74;
+  --radius:22px;
 }
-
-.app {
-  max-width: 400px;
-  margin: auto;
-  text-align: center;
-  padding-top: 10px;
-}
-
-.card-stack {
-  position: relative;
-  width: 100%;
-  height: 380px;
-}
-
-.cat-card {
-  width: 100%;
-  height: 380px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 22px;
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  transition: transform 0.25s ease-out;
-  touch-action: pan-y;
-}
-
-.buttons {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 20px;
-}
-
-.buttons button {
-  font-size: 30px;
-  padding: 12px;
-  border-radius: 50%;
-  border: none;
-  background: white;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-}
-
-.view-liked {
-  display: inline-block;
-  margin-top: 20px;
-  text-decoration: none;
-  font-weight: bold;
-  color: #ff3e7f;
-}
-
-.loader {
-  width: 40px;
-  height: 40px;
-  border: 5px solid #ffb3d9;
-  border-top-color: transparent;
-  border-radius: 50%;
-  margin: 20px auto;
-  animation: spin 1s linear infinite;
-  display: none;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Quicksand',sans-serif;background:var(--bg);overflow:hidden}
+.app{max-width:420px;margin:0 auto;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:18px 14px;}
+.brand{margin:6px 0 12px;font-size:18px;color:#3b2030}
+.card-stack{width:100%;height:380px;position:relative;display:flex;align-items:center;justify-content:center}
+.card{position:absolute;inset:0;border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 14px 36px rgba(40,12,30,0.08);touch-action:pan-y;transition:transform .22s cubic-bezier(.22,.9,.32,1),opacity .22s}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.controls{width:100%;display:flex;justify-content:space-evenly;gap:12px;margin-top:18px}
+.btn{width:66px;height:66px;border-radius:50%;border:none;background:white;box-shadow:0 8px 20px rgba(0,0,0,0.08);font-size:22px;cursor:pointer}
+.btn-like{background:linear-gradient(135deg,var(--accent),#ff9cc2);color:#fff}
+.btn-dislike{background:linear-gradient(135deg,#9fd9ff,#6fbfff);color:#022}
+.btn-undo{background:linear-gradient(135deg,#fff1c9,#ffd8a8);color:#6b3f00}
+.view-liked{margin-top:14px;color:#ff3e7f;text-decoration:none;font-weight:600}
+/* Overlay spinner */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;z-index:9999}
+.paw-wheel{width:120px;height:120px;position:relative;display:block;transform-origin:center;animation:rotateWheel 1.6s linear infinite}
+.paw{position:absolute;left:50%;top:50%;transform-origin:center center;opacity:0.98}
+.paw1{transform:translate(-50%,-120%)}
+.paw2{transform:translate(60%,-10%)}
+.paw3{transform:translate(-160%,-10%)}
+@keyframes rotateWheel{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@media (max-width:380px){.card-stack{height:340px}.btn{width:60px;height:60px;font-size:20px}}
