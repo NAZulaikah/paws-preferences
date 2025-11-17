@@ -1,53 +1,63 @@
-/* Allow full scrolling */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  overflow-y: auto;
-  font-family: sans-serif;
-  background: #fff7fb;
+/* Enhanced responsive layout for web + phone */
+:root{
+  --bg: #fff7fb;
+  --card: #fff;
+  --accent: #ff6b9a;
+  --accent-2: #ffd8a8;
+  --muted: #6d6d75;
+  --like: #ff6b9a;
+  --dislike: #9fd9ff;
+  --undo: #ffe9a8;
+  --shadow: rgba(24,20,40,0.08);
+  --radius: 18px;
 }
 
-/* Main container scrolls naturally */
-.app {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; font-family:'Quicksand',system-ui,Arial; background:linear-gradient(180deg,#fff7fb,#fffaf0); color:#222; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px;}
 
-/* Card stack container – DO NOT block scroll */
-.card-stack {
-  position: relative;
-  width: 100%;
-  height: 420px;
-  margin: 0 auto;
-  overflow: visible; /* IMPORTANT */
-}
+/* Topbar */
+.topbar{background:linear-gradient(90deg,#fff,#fff); padding:14px 0; position:sticky; top:0; z-index:40; box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.app-title{margin:0;font-size:20px;color:#3b2030}
+.tagline{margin:6px 0 0;font-size:13px;color:var(--muted)}
 
-/* Cat card */
-.cat-card {
-  width: 100%;
-  height: 420px;
-  border-radius: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
+/* App layout */
+.app{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0 28px;}
 
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+/* Spinner */
+.spinner{position:fixed;left:50%;top:50%;width:56px;height:56px;border-radius:50%;border:6px solid rgba(255,255,255,0.6);border-top-color:var(--accent);transform:translate(-50%,-50%);box-shadow:0 6px 18px var(--shadow);animation:spin 1s linear infinite;z-index:9999}
+.hidden{display:none}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
 
-  touch-action: pan-y;  
-  /* This allows vertical scrolling + horizontal swiping */
-}
+/* Card stack */
+.card-stack{position:relative;width:min(420px,90vw);height:min(68vh,580px);margin:8px auto;display:flex;align-items:center;justify-content:center;overflow:visible}
+.card{position:absolute;inset:0;border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 18px 40px rgba(44,10,30,0.08);display:flex;align-items:center;justify-content:center;touch-action:pan-y;transition:transform 220ms cubic-bezier(.22,.9,.32,1),opacity 220ms}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* Mobile responsive */
-@media (max-width: 600px) {
-  .cat-card, .card-stack {
-    height: 360px;
-  }
+/* Controls - sticky bottom on mobile */
+.controls{display:flex;gap:18px;justify-content:center;margin-top:8px;padding:12px 0;position:relative;z-index:30}
+.control-btn{width:68px;height:68px;border-radius:50%;border:none;font-size:22px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,0.08);transition:transform 140ms}
+.control-btn:active{transform:scale(.96)}
+.like{background:linear-gradient(135deg,var(--like),#ff9cc2);color:white}
+.dislike{background:linear-gradient(135deg,#9fd9ff,var(--dislike));color:#012}
+.undo{background:linear-gradient(135deg,#fff2cc,var(--undo));color:#6b3f00}
 
-  .app {
-    padding: 16px;
-  }
+/* Summary */
+.summary-page{position:fixed;inset:0;background:linear-gradient(180deg,#fff,#fff7fb);padding:28px 16px;overflow:auto;z-index:80;display:flex;align-items:flex-start;justify-content:center}
+.summary-inner{max-width:760px;width:100%;text-align:center}
+.liked-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:16px}
+.liked-gallery img{width:100%;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+.summary-actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.restart{background:var(--accent-2);color:#5b2a00}
+.clear{background:#fff2f6;color:#7a2f4a}
+.link{background:transparent;color:var(--muted);text-decoration:underline;padding:10px}
+
+/* Footer */
+.footer{padding:10px;text-align:center;color:var(--muted);font-size:13px}
+
+/* Responsive tweaks */
+@media (max-width:520px){
+  .controls{position:fixed;left:0;right:0;bottom:12px;margin:0;padding:0 12px;justify-content:space-around;background:transparent}
+  .card-stack{height:60vh;min-height:340px}
 }
