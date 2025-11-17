@@ -1,42 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Paws & Preferences</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ff6b9a">
-
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paws & Preferences</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff6b9a">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-    <div id="spinner" class="spinner hidden"></div>
-
-    <header>
-        <h1>Paws & Preferences</h1>
-    </header>
-
-    <main>
-        <div class="card-area">
-            <div id="card-container"></div>
-        </div>
-
-        <div class="controls">
-            <button id="undo" class="control-btn undo">↩️</button>
-            <button id="dislike" class="control-btn dislike">❌</button>
-            <button id="like" class="control-btn like">❤️</button>
-        </div>
-    </main>
-
-    <div id="summary" class="hidden summary-page">
-        <h2>You liked <span id="liked-count"></span> cats!</h2>
-        <div id="liked-gallery"></div>
-
-        <button id="restart" class="restart-btn">Restart</button>
+  <header class="topbar">
+    <div class="wrap">
+      <h1 class="app-title">Paws & Preferences</h1>
+      <p class="tagline">Swipe kitties — keep the ones you love 😻</p>
     </div>
+  </header>
 
-    <script src="script.js"></script>
+  <main class="wrap app">
+    <!-- Spinner -->
+    <div id="spinner" class="spinner hidden" aria-hidden="true"></div>
+
+    <!-- Card area -->
+    <section class="card-stack" id="cardStack" aria-live="polite"></section>
+
+    <!-- Controls -->
+    <nav class="controls" aria-label="Actions">
+      <button id="undo" class="control-btn undo" title="Undo last action">↩️</button>
+      <button id="dislike" class="control-btn dislike" title="Dislike">❌</button>
+      <button id="like" class="control-btn like" title="Like">❤️</button>
+    </nav>
+  </main>
+
+  <!-- Summary -->
+  <aside id="summary" class="summary-page hidden" role="dialog" aria-modal="false">
+    <div class="summary-inner">
+      <h2>You liked <span id="liked-count">0</span> cats!</h2>
+      <div id="liked-gallery" class="liked-gallery"></div>
+      <div class="summary-actions">
+        <button id="restart" class="btn restart">Restart</button>
+        <button id="clear" class="btn clear">Clear saved progress</button>
+        <a id="open-home" class="btn link" href="#" style="display:none;">Back to app</a>
+      </div>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <small>Images from <a href="https://cataas.com" target="_blank" rel="noopener">Cataas</a></small>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
