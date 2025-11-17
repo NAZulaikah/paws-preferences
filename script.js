@@ -1,211 +1,117 @@
-
-/* script.js - paws-preferences (Full version with LocalStorage) */
-const TOTAL_CATS = 12; // number of cards to fetch
+/* Main swipe app with overlay paw-wheel spinner (3 paws rotating) */
+const TOTAL = 12;
+const cardStack = document.getElementById('cardStack');
+const overlay = document.getElementById('overlay');
+const likeBtn = document.getElementById('like');
+const dislikeBtn = document.getElementById('dislike');
+const undoBtn = document.getElementById('undo');
 
 let cats = [];
-let liked = [];
-let currentIndex = 0;
+let idx = 0;
+let liked = JSON.parse(localStorage.getItem('likedCats')||'[]');
+let history = [];
 
-const cardContainer = document.getElementById('card-container');
-const summaryEl = document.getElementById('summary');
-const likeCount = document.getElementById('like-count');
-const likedGrid = document.getElementById('liked-grid');
+// overlay spinner helpers
+function showOverlay(){ overlay.classList.remove('hidden'); }
+function hideOverlay(){ overlay.classList.add('hidden'); }
 
-function getCatURL() {
-  // Cataas random cat image; rand query to reduce cache collisions
-  return `https://cataas.com/cat?width=800&height=900&rand=${Math.random()}`;
+function catURL(){ return `https://cataas.com/cat?width=800&height=900&rand=${Math.random()}`; }
+
+// preload images and show overlay while loading
+function preload(list, cb){
+  if(!list || list.length===0){ if(cb) cb(); return; }
+  let loaded=0; showOverlay();
+  list.forEach(src => {
+    const img = new Image();
+    img.onload = ()=> { loaded++; if(loaded===list.length){ hideOverlay(); if(cb) cb(); } };
+    img.onerror = ()=> { loaded++; if(loaded===list.length){ hideOverlay(); if(cb) cb(); } };
+    img.src = src;
+  });
 }
 
-// --- LocalStorage helpers ---
-function saveState() {
-  localStorage.setItem('paws_cats', JSON.stringify(cats));
-  localStorage.setItem('paws_liked', JSON.stringify(liked));
-  localStorage.setItem('paws_index', String(currentIndex));
-}
-
-function loadState() {
-  const a = localStorage.getItem('paws_cats');
-  const b = localStorage.getItem('paws_liked');
-  const c = localStorage.getItem('paws_index');
-  if (a && b && c !== null) {
-    try {
-      cats = JSON.parse(a);
-      liked = JSON.parse(b);
-      currentIndex = Number(c);
-      // Basic validation
-      if (!Array.isArray(cats) || !Array.isArray(liked) || Number.isNaN(currentIndex)) throw 0;
-      return true;
-    } catch (e) {
-      // corrupted state
-      localStorage.removeItem('paws_cats');
-      localStorage.removeItem('paws_liked');
-      localStorage.removeItem('paws_index');
-      return false;
-    }
+function init(){
+  const s = localStorage.getItem('paws_state');
+  if(s){
+    try{
+      const o = JSON.parse(s);
+      cats = o.cats; idx = o.idx||0; liked = o.liked||[];
+      preload(cats, render); return;
+    }catch(e){}
   }
-  return false;
-}
-
-function clearState() {
-  localStorage.removeItem('paws_cats');
-  localStorage.removeItem('paws_liked');
-  localStorage.removeItem('paws_index');
-}
-
-// --- App logic ---
-function init() {
-  const resumed = loadState();
-  if (resumed) {
-    renderCards();
-    return;
-  }
-  // fresh session
-  cats = Array.from({length: TOTAL_CATS}, () => getCatURL());
-  liked = [];
-  currentIndex = 0;
+  cats = Array.from({length: TOTAL}, () => catURL());
+  idx = 0; liked = JSON.parse(localStorage.getItem('likedCats')||'[]');
   saveState();
-  renderCards();
+  preload(cats, render);
 }
 
-function renderCards() {
-  cardContainer.innerHTML = '';
-  if (currentIndex >= cats.length) {
-    showSummary();
-    return;
-  }
+function saveState(){ localStorage.setItem('paws_state', JSON.stringify({cats, idx, liked})); }
 
-  // Render from top (current) to end, so top card is current
-  for (let i = currentIndex; i < cats.length; i++) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.zIndex = String(cats.length - i);
-
+function render(){
+  cardStack.innerHTML = '';
+  if(idx >= cats.length){ return showSummary(); }
+  for(let i = idx; i < cats.length; i++){
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.style.zIndex = String(cats.length - i);
     const img = document.createElement('img');
     img.src = cats[i];
-    img.alt = 'Cute cat';
-
-    // small delay for nicer stacking appearance
-    card.appendChild(img);
-    cardContainer.appendChild(card);
-
-    if (i === currentIndex) enableSwipe(card);
+    el.appendChild(img);
+    cardStack.appendChild(el);
+    if(i === idx) attach(el);
   }
 }
 
-function enableSwipe(card) {
-  let startX = 0;
-  let currentX = 0;
-  let dragging = false;
-
-  // Add pointer events to support mouse + touch
-  card.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    startX = e.clientX;
+function attach(card){
+  let startX=0, startY=0, curX=0, curY=0, dragging=false;
+  card.style.transition = 'transform .22s cubic-bezier(.22,.9,.32,1)';
+  function down(e){
     dragging = true;
-    card.setPointerCapture(e.pointerId);
+    const p = e.touches ? e.touches[0] : e;
+    startX = p.clientX; startY = p.clientY;
     card.style.transition = 'none';
-  });
-
-  card.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    currentX = e.clientX - startX;
-    const rot = currentX / 18;
-    card.style.transform = `translateX(${currentX}px) rotate(${rot}deg)`;
-  });
-
-  card.addEventListener('pointerup', (e) => {
-    if (!dragging) return;
+  }
+  function move(e){
+    if(!dragging) return;
+    const p = e.touches ? e.touches[0] : e;
+    curX = p.clientX - startX; curY = p.clientY - startY;
+    if(Math.abs(curY) > Math.abs(curX) && Math.abs(curY) > 10) return;
+    const rot = curX / 18;
+    card.style.transform = `translateX(${curX}px) rotate(${rot}deg)`;
+    e.preventDefault && e.preventDefault();
+  }
+  function up(e){
+    if(!dragging) return;
     dragging = false;
-    card.releasePointerCapture(e.pointerId);
-    card.style.transition = 'transform 220ms cubic-bezier(.22,.9,.32,1)';
-    if (currentX > 120) {
-      // liked
-      animateOut(card, 'right');
-      handleLike();
-    } else if (currentX < -120) {
-      animateOut(card, 'left');
-      handleDislike();
-    } else {
-      // snap back
-      card.style.transform = '';
-    }
-    currentX = 0;
-  });
-
-  // Accessibility: allow keyboard keypresses when focused
-  card.tabIndex = 0;
-  card.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') {
-      animateOut(card, 'right'); handleLike();
-    } else if (e.key === 'ArrowLeft') {
-      animateOut(card, 'left'); handleDislike();
-    }
-  });
+    card.style.transition = 'transform .22s cubic-bezier(.22,.9,.32,1)';
+    if(curX > 120){ flyOut(card, 'right'); doLike(); }
+    else if(curX < -120){ flyOut(card, 'left'); doDislike(); }
+    else { card.style.transform = ''; }
+    curX = 0; curY = 0;
+  }
+  card.addEventListener('touchstart', down, {passive:true});
+  card.addEventListener('touchmove', move, {passive:false});
+  card.addEventListener('touchend', up);
+  card.addEventListener('mousedown', (e)=>{ down(e); window.addEventListener('mousemove', move); window.addEventListener('mouseup', function mu(ev){ up(ev); window.removeEventListener('mousemove', move); }, {once:true}); });
 }
 
-function animateOut(card, dir='right') {
+function flyOut(card, dir){
   const off = dir === 'right' ? window.innerWidth * 1.2 : -window.innerWidth * 1.2;
   const rot = dir === 'right' ? 30 : -30;
   card.style.transform = `translateX(${off}px) rotate(${rot}deg)`;
   card.style.opacity = '0';
 }
 
-function handleLike() {
-  liked.push(cats[currentIndex]);
-  nextCard();
-}
+function doLike(){ history.push({i:idx, liked:true}); liked.push(cats[idx]); localStorage.setItem('likedCats', JSON.stringify(liked)); idx++; saveState(); setTimeout(()=>{ if(idx>=cats.length) showSummary(); else render(); }, 220); }
+function doDislike(){ history.push({i:idx, liked:false}); idx++; saveState(); setTimeout(()=>{ if(idx>=cats.length) showSummary(); else render(); }, 220); }
 
-function handleDislike() {
-  nextCard();
-}
+likeBtn.addEventListener('click', ()=>{ const top = cardStack.querySelector('.card'); if(!top) return; flyOut(top,'right'); doLike(); });
+dislikeBtn.addEventListener('click', ()=>{ const top = cardStack.querySelector('.card'); if(!top) return; flyOut(top,'left'); doDislike(); });
+undoBtn.addEventListener('click', ()=>{ const last = history.pop(); if(!last) return; idx = last.i; if(last.liked) liked.pop(); saveState(); render(); });
 
-function nextCard() {
-  currentIndex++;
-  saveState();
-  // small timeout so animation can be visible
-  setTimeout(() => {
-    if (currentIndex >= cats.length) showSummary();
-    else renderCards();
-  }, 220);
-}
+function showSummary(){ window.location.href = 'liked.html'; }
 
-function showSummary() {
-  // finish session — clear local progress so next run starts fresh
-  clearState();
-  // hide app and show summary
-  document.getElementById('app').classList.add('hidden');
-  summaryEl.classList.remove('hidden');
-  likeCount.textContent = String(liked.length);
-  likedGrid.innerHTML = liked.map(src => `<img src="${src}" alt="liked cat"/>`).join('');
-}
+// PWA register
+if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js'); }catch(e){} }
 
-// Controls
-document.getElementById('like').addEventListener('click', () => {
-  // simulate swipe right
-  const top = document.querySelector('.card');
-  if (!top) return;
-  animateOut(top, 'right');
-  handleLike();
-});
-document.getElementById('dislike').addEventListener('click', () => {
-  const top = document.querySelector('.card');
-  if (!top) return;
-  animateOut(top, 'left');
-  handleDislike();
-});
-
-// Restart & clear
-document.getElementById('restart').addEventListener('click', () => {
-  // restart: regenerate cats and start anew
-  clearState();
-  document.getElementById('app').classList.remove('hidden');
-  summaryEl.classList.add('hidden');
-  init();
-});
-document.getElementById('clear').addEventListener('click', () => {
-  clearState();
-  alert('Saved progress cleared.');
-});
-
-// Start
+// start
 init();
