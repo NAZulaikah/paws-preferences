@@ -1,9 +1,5 @@
-const grid = document.getElementById("likedGrid");
-const liked = JSON.parse(localStorage.getItem("likedCats") || "[]");
-
-grid.innerHTML = liked.map(url => `<img src="${url}">`).join("");
-
-function clearLikes() {
-  localStorage.removeItem("likedCats");
-  grid.innerHTML = "";
-}
+const grid = document.getElementById('likedGrid');
+const clearBtn = document.getElementById('clearBtn');
+function loadLiked(){ const liked = JSON.parse(localStorage.getItem('likedCats')||'[]'); grid.innerHTML = liked.map(u=>`<img src="${u}" alt="liked cat">`).join(''); }
+clearBtn && clearBtn.addEventListener('click', ()=>{ localStorage.removeItem('likedCats'); loadLiked(); });
+loadLiked();
