@@ -1,211 +1,175 @@
-
-/* script.js - paws-preferences (Full version with LocalStorage) */
-const TOTAL_CATS = 12; // number of cards to fetch
+const TOTAL_CATS = 15;
 
 let cats = [];
 let liked = [];
 let currentIndex = 0;
+let undoStack = [];
 
-const cardContainer = document.getElementById('card-container');
-const summaryEl = document.getElementById('summary');
-const likeCount = document.getElementById('like-count');
-const likedGrid = document.getElementById('liked-grid');
+const container = document.getElementById("card-container");
+const spinner = document.getElementById("spinner");
+const summaryPage = document.getElementById("summary");
+const likedGallery = document.getElementById("liked-gallery");
+const likedCount = document.getElementById("liked-count");
+
+const likeBtn = document.getElementById("like");
+const dislikeBtn = document.getElementById("dislike");
+const undoBtn = document.getElementById("undo");
+const restartBtn = document.getElementById("restart");
 
 function getCatURL() {
-  // Cataas random cat image; rand query to reduce cache collisions
-  return `https://cataas.com/cat?width=800&height=900&rand=${Math.random()}`;
+  return `https://cataas.com/cat?${Math.random()}`;
 }
 
-// --- LocalStorage helpers ---
-function saveState() {
-  localStorage.setItem('paws_cats', JSON.stringify(cats));
-  localStorage.setItem('paws_liked', JSON.stringify(liked));
-  localStorage.setItem('paws_index', String(currentIndex));
+/* Spinner control */
+function showSpinner() { spinner.classList.remove("hidden"); }
+function hideSpinner() { spinner.classList.add("hidden"); }
+
+/* Preload all images */
+function preloadImages(urls, callback) {
+  let loaded = 0;
+  showSpinner();
+  urls.forEach(url => {
+    const img = new Image();
+    img.onload = () => {
+      loaded++;
+      if (loaded === urls.length) hideSpinner();
+    };
+    img.src = url;
+  });
 }
 
-function loadState() {
-  const a = localStorage.getItem('paws_cats');
-  const b = localStorage.getItem('paws_liked');
-  const c = localStorage.getItem('paws_index');
-  if (a && b && c !== null) {
-    try {
-      cats = JSON.parse(a);
-      liked = JSON.parse(b);
-      currentIndex = Number(c);
-      // Basic validation
-      if (!Array.isArray(cats) || !Array.isArray(liked) || Number.isNaN(currentIndex)) throw 0;
-      return true;
-    } catch (e) {
-      // corrupted state
-      localStorage.removeItem('paws_cats');
-      localStorage.removeItem('paws_liked');
-      localStorage.removeItem('paws_index');
-      return false;
-    }
-  }
-  return false;
-}
-
-function clearState() {
-  localStorage.removeItem('paws_cats');
-  localStorage.removeItem('paws_liked');
-  localStorage.removeItem('paws_index');
-}
-
-// --- App logic ---
-function init() {
-  const resumed = loadState();
-  if (resumed) {
-    renderCards();
-    return;
-  }
-  // fresh session
-  cats = Array.from({length: TOTAL_CATS}, () => getCatURL());
-  liked = [];
-  currentIndex = 0;
-  saveState();
-  renderCards();
-}
-
+/* Rendering cards */
 function renderCards() {
-  cardContainer.innerHTML = '';
-  if (currentIndex >= cats.length) {
-    showSummary();
-    return;
-  }
+  container.innerHTML = "";
+  if (currentIndex >= cats.length) return showSummary();
 
-  // Render from top (current) to end, so top card is current
   for (let i = currentIndex; i < cats.length; i++) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.zIndex = String(cats.length - i);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.zIndex = cats.length - i;
 
-    const img = document.createElement('img');
+    const img = document.createElement("img");
     img.src = cats[i];
-    img.alt = 'Cute cat';
 
-    // small delay for nicer stacking appearance
     card.appendChild(img);
-    cardContainer.appendChild(card);
-
-    if (i === currentIndex) enableSwipe(card);
+    container.appendChild(card);
   }
+
+  attachSwipeListeners();
 }
 
-function enableSwipe(card) {
+/* Swipe handling (touch + mouse) */
+function attachSwipeListeners() {
+  const topCard = container.querySelector(".card");
+  if (!topCard) return;
+
   let startX = 0;
   let currentX = 0;
-  let dragging = false;
 
-  // Add pointer events to support mouse + touch
-  card.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    startX = e.clientX;
-    dragging = true;
-    card.setPointerCapture(e.pointerId);
-    card.style.transition = 'none';
-  });
+  function start(e) {
+    startX = e.touches ? e.touches[0].clientX : e.clientX;
+  }
 
-  card.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    currentX = e.clientX - startX;
-    const rot = currentX / 18;
-    card.style.transform = `translateX(${currentX}px) rotate(${rot}deg)`;
-  });
+  function move(e) {
+    currentX = e.touches ? e.touches[0].clientX : e.clientX;
+    const diff = currentX - startX;
+    topCard.style.transform = `translateX(${diff}px) rotate(${diff / 20}deg)`;
+  }
 
-  card.addEventListener('pointerup', (e) => {
-    if (!dragging) return;
-    dragging = false;
-    card.releasePointerCapture(e.pointerId);
-    card.style.transition = 'transform 220ms cubic-bezier(.22,.9,.32,1)';
-    if (currentX > 120) {
-      // liked
-      animateOut(card, 'right');
-      handleLike();
-    } else if (currentX < -120) {
-      animateOut(card, 'left');
-      handleDislike();
-    } else {
-      // snap back
-      card.style.transform = '';
+  function end() {
+    const diff = currentX - startX;
+    if (diff > 120) handleLike();
+    else if (diff < -120) handleDislike();
+    else {
+      topCard.style.transform = "translateX(0)";
     }
-    currentX = 0;
-  });
+  }
 
-  // Accessibility: allow keyboard keypresses when focused
-  card.tabIndex = 0;
-  card.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') {
-      animateOut(card, 'right'); handleLike();
-    } else if (e.key === 'ArrowLeft') {
-      animateOut(card, 'left'); handleDislike();
-    }
-  });
-}
+  topCard.addEventListener("mousedown", start);
+  topCard.addEventListener("mousemove", move);
+  topCard.addEventListener("mouseup", end);
 
-function animateOut(card, dir='right') {
-  const off = dir === 'right' ? window.innerWidth * 1.2 : -window.innerWidth * 1.2;
-  const rot = dir === 'right' ? 30 : -30;
-  card.style.transform = `translateX(${off}px) rotate(${rot}deg)`;
-  card.style.opacity = '0';
+  topCard.addEventListener("touchstart", start);
+  topCard.addEventListener("touchmove", move);
+  topCard.addEventListener("touchend", end);
 }
 
 function handleLike() {
+  undoStack.push({ index: currentIndex, liked: true });
   liked.push(cats[currentIndex]);
-  nextCard();
+  currentIndex++;
+  renderCards();
+  saveState();
 }
 
 function handleDislike() {
-  nextCard();
-}
-
-function nextCard() {
+  undoStack.push({ index: currentIndex, liked: false });
   currentIndex++;
+  renderCards();
   saveState();
-  // small timeout so animation can be visible
-  setTimeout(() => {
-    if (currentIndex >= cats.length) showSummary();
-    else renderCards();
-  }, 220);
 }
 
+/* Undo last swipe */
+undoBtn.addEventListener("click", () => {
+  if (undoStack.length === 0) return;
+
+  const last = undoStack.pop();
+  currentIndex = last.index;
+
+  if (last.liked) liked.pop();
+
+  renderCards();
+  saveState();
+});
+
+/* Summary screen */
 function showSummary() {
-  // finish session — clear local progress so next run starts fresh
-  clearState();
-  // hide app and show summary
-  document.getElementById('app').classList.add('hidden');
-  summaryEl.classList.remove('hidden');
-  likeCount.textContent = String(liked.length);
-  likedGrid.innerHTML = liked.map(src => `<img src="${src}" alt="liked cat"/>`).join('');
+  likedCount.textContent = liked.length;
+  likedGallery.innerHTML = liked
+    .map(url => `<img src="${url}" />`)
+    .join("");
+  summaryPage.classList.remove("hidden");
 }
 
-// Controls
-document.getElementById('like').addEventListener('click', () => {
-  // simulate swipe right
-  const top = document.querySelector('.card');
-  if (!top) return;
-  animateOut(top, 'right');
-  handleLike();
-});
-document.getElementById('dislike').addEventListener('click', () => {
-  const top = document.querySelector('.card');
-  if (!top) return;
-  animateOut(top, 'left');
-  handleDislike();
+/* Restart */
+restartBtn.addEventListener("click", () => {
+  localStorage.removeItem("paws_pref_state");
+  location.reload();
 });
 
-// Restart & clear
-document.getElementById('restart').addEventListener('click', () => {
-  // restart: regenerate cats and start anew
-  clearState();
-  document.getElementById('app').classList.remove('hidden');
-  summaryEl.classList.add('hidden');
-  init();
-});
-document.getElementById('clear').addEventListener('click', () => {
-  clearState();
-  alert('Saved progress cleared.');
-});
+/* Save progress */
+function saveState() {
+  localStorage.setItem("paws_pref_state", JSON.stringify({
+    cats, liked, currentIndex
+  }));
+}
 
-// Start
+/* Load progress */
+function loadState() {
+  const state = localStorage.getItem("paws_pref_state");
+  return state ? JSON.parse(state) : null;
+}
+
+/* Init */
+function init() {
+  const saved = loadState();
+
+  if (saved) {
+    cats = saved.cats;
+    liked = saved.liked;
+    currentIndex = saved.currentIndex;
+    preloadImages(cats);
+    return renderCards();
+  }
+
+  cats = Array.from({ length: TOTAL_CATS }, getCatURL);
+  preloadImages(cats);
+  renderCards();
+  saveState();
+}
+
+/* Buttons */
+likeBtn.onclick = handleLike;
+dislikeBtn.onclick = handleDislike;
+
 init();
