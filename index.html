@@ -1,29 +1,37 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Paws & Preferences</title>
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff6b9a">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="app">
+    <h1 class="brand">Paws & Preferences 🐾</h1>
 
-<div class="app">
-  <h1>Paws & Preferences 🐾</h1>
+    <!-- Full-screen paw spinner overlay -->
+    <div id="overlay" class="overlay hidden" aria-hidden="true">
+      <div class="paw-wheel" aria-hidden="true">
+        <svg class="paw paw1" viewBox="0 0 24 24" width="36" height="36"><path fill="#ff6b9a" d="M12 13c2.21 0 4-1.79 4-4S14.21 5 12 5 8 6.79 8 9s1.79 4 4 4z"/><path fill="#ff6b9a" d="M6.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 3.5zM15 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 15 3.5z"/></svg>
+        <svg class="paw paw2" viewBox="0 0 24 24" width="36" height="36"><path fill="#ffd28f" d="M12 13c2.21 0 4-1.79 4-4S14.21 5 12 5 8 6.79 8 9s1.79 4 4 4z"/><path fill="#ffd28f" d="M6.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 3.5zM15 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 15 3.5z"/></svg>
+        <svg class="paw paw3" viewBox="0 0 24 24" width="36" height="36"><path fill="#b3e6ff" d="M12 13c2.21 0 4-1.79 4-4S14.21 5 12 5 8 6.79 8 9s1.79 4 4 4z"/><path fill="#b3e6ff" d="M6.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 9 3.5zM15 3.5a1.2 1.2 0 1 0 0-2.4A1.2 1.2 0 0 0 15 3.5z"/></svg>
+      </div>
+    </div>
 
-  <div class="loader" id="loader"></div>
+    <div class="card-stack" id="cardStack" aria-live="polite"></div>
 
-  <div class="card-stack" id="cardStack"></div>
+    <div class="controls">
+      <button id="dislike" class="btn btn-dislike" aria-label="Dislike">❌</button>
+      <button id="undo" class="btn btn-undo" aria-label="Undo">↩️</button>
+      <button id="like" class="btn btn-like" aria-label="Like">❤️</button>
+    </div>
 
-  <div class="buttons">
-    <button id="dislikeBtn">❌</button>
-    <button id="undoBtn">↩️</button>
-    <button id="likeBtn">❤️</button>
+    <a class="view-liked" href="liked.html">View liked cats →</a>
   </div>
 
-  <a href="liked.html" class="view-liked">View Liked Cats →</a>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
