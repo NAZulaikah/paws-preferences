@@ -1,29 +1,127 @@
-:root{
-  --bg:#fff6fb;
-  --card:#fff;
-  --accent:#ff6b9a;
-  --muted:#6b6b74;
-  --radius:22px;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fffaf4;
+    color: #333;
+    text-align: center;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Quicksand',sans-serif;background:var(--bg);overflow:hidden}
-.app{max-width:420px;margin:0 auto;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:18px 14px;}
-.brand{margin:6px 0 12px;font-size:18px;color:#3b2030}
-.card-stack{width:100%;height:380px;position:relative;display:flex;align-items:center;justify-content:center}
-.card{position:absolute;inset:0;border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 14px 36px rgba(40,12,30,0.08);touch-action:pan-y;transition:transform .22s cubic-bezier(.22,.9,.32,1),opacity .22s}
-.card img{width:100%;height:100%;object-fit:cover;display:block}
-.controls{width:100%;display:flex;justify-content:space-evenly;gap:12px;margin-top:18px}
-.btn{width:66px;height:66px;border-radius:50%;border:none;background:white;box-shadow:0 8px 20px rgba(0,0,0,0.08);font-size:22px;cursor:pointer}
-.btn-like{background:linear-gradient(135deg,var(--accent),#ff9cc2);color:#fff}
-.btn-dislike{background:linear-gradient(135deg,#9fd9ff,#6fbfff);color:#022}
-.btn-undo{background:linear-gradient(135deg,#fff1c9,#ffd8a8);color:#6b3f00}
-.view-liked{margin-top:14px;color:#ff3e7f;text-decoration:none;font-weight:600}
-/* Overlay spinner */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;z-index:9999}
-.paw-wheel{width:120px;height:120px;position:relative;display:block;transform-origin:center;animation:rotateWheel 1.6s linear infinite}
-.paw{position:absolute;left:50%;top:50%;transform-origin:center center;opacity:0.98}
-.paw1{transform:translate(-50%,-120%)}
-.paw2{transform:translate(60%,-10%)}
-.paw3{transform:translate(-160%,-10%)}
-@keyframes rotateWheel{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-@media (max-width:380px){.card-stack{height:340px}.btn{width:60px;height:60px;font-size:20px}}
+
+.hidden {
+    display: none;
+}
+
+/* Landing Page */
+#landing {
+    padding: 20px;
+}
+
+#startBtn {
+    background: #ff7f7f;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#startBtn:hover {
+    background: #ff5252;
+}
+
+.clear {
+    background: #ccc;
+    padding: 10px 20px;
+    border-radius: 14px;
+    border: none;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.clear:hover {
+    background: #b3b3b3;
+}
+
+/* Liked List */
+#likedContainer {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+#likedContainer img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+/* Swipe Page */
+#swipePage {
+    padding: 20px;
+}
+
+#progress {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#cardContainer {
+    width: 90%;
+    max-width: 350px;
+    margin: auto;
+    position: relative;
+}
+
+#catCard {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Floating Buttons */
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.round {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-size: 26px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.red {
+    background: #ffb0b0;
+}
+
+.green {
+    background: #a6f2a6;
+}
+
+.red:hover { background: #ff8a8a; }
+.green:hover { background: #7ee67e; }
+
+/* Slide Animations */
+.slide-left {
+    transform: translateX(-300px) rotate(-20deg);
+    opacity: 0;
+}
+
+.slide-right {
+    transform: translateX(300px) rotate(20deg);
+    opacity: 0;
+}
